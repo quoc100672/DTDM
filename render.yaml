@@ -13,6 +13,8 @@ services:
         value: "18"
       - key: NODE_ENV
         value: production
+      - key: DATABASE_URL
+        value: postgresql://postgres:tcubtkxIDuOtlufJUjivBvKbUTmmXiOs@caboose.proxy.rlwy.net:26693/railway
 
 databases:
   # PostgreSQL Database (FREE)
