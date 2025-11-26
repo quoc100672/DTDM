@@ -10,7 +10,7 @@ class Product {
   // Tìm kiếm sản phẩm
   static async search(keyword) {
     const [rows] = await db.query(
-      'SELECT * FROM products WHERE name LIKE ? OR description LIKE ?',
+      'SELECT * FROM products WHERE name ILIKE $1 OR description ILIKE $2',
       [`%${keyword}%`, `%${keyword}%`]
     );
     return rows;
@@ -18,7 +18,7 @@ class Product {
 
   // Lấy sản phẩm theo ID
   static async getById(id) {
-    const [rows] = await db.query('SELECT * FROM products WHERE id = ?', [id]);
+    const [rows] = await db.query('SELECT * FROM products WHERE id = $1', [id]);
     return rows[0];
   }
 
@@ -26,26 +26,26 @@ class Product {
   static async create(productData) {
     const { name, description, price, quantity } = productData;
     const [result] = await db.query(
-      'INSERT INTO products (name, description, price, quantity) VALUES (?, ?, ?, ?)',
+      'INSERT INTO products (name, description, price, quantity) VALUES ($1, $2, $3, $4) RETURNING id',
       [name, description, price, quantity]
     );
-    return result.insertId;
+    return result[0].id;
   }
 
   // Cập nhật sản phẩm
   static async update(id, productData) {
     const { name, description, price, quantity } = productData;
     const [result] = await db.query(
-      'UPDATE products SET name = ?, description = ?, price = ?, quantity = ? WHERE id = ?',
+      'UPDATE products SET name = $1, description = $2, price = $3, quantity = $4 WHERE id = $5',
       [name, description, price, quantity, id]
     );
-    return result.affectedRows;
+    return result.rowCount;
   }
 
   // Xóa sản phẩm
   static async delete(id) {
-    const [result] = await db.query('DELETE FROM products WHERE id = ?', [id]);
-    return result.affectedRows;
+    const [result] = await db.query('DELETE FROM products WHERE id = $1', [id]);
+    return result.rowCount;
   }
 }
 
