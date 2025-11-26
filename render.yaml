@@ -1,0 +1,22 @@
+services:
+  # Web Service
+  - type: web
+    name: nodejs-product-app
+    env: node
+    region: singapore
+    plan: free
+    rootDir: nodejs
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      - key: NODE_ENV
+        value: production
+
+databases:
+  # PostgreSQL Database (FREE)
+  - name: product-postgres
+    databaseName: product_db
+    plan: free
+    region: singapore
